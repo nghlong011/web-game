@@ -1,44 +1,67 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="relative min-h-screen flex flex-col justify-between items-center overflow-hidden" style="background: url('/images/bg-battle.webp') center center/cover no-repeat;">
-    <!-- Logo -->
-    <div class="w-full flex justify-center pt-8">
-        <img src="/images/logo.png" alt="Logo" class="h-20 md:h-28 drop-shadow-lg">
+<div class="wrap page-wrap parallax">
+    <div class="banner ">
+        <div class="logo flex justify-center items-center">
+            @php
+                $logo = $settings->where('name', 'logo')->first();
+            @endphp
+            <img src="{{ $logo ? $logo->img_path : '/images/logo.png' }}" alt="logo">
+        </div>
+
+        <div class="slogan flex justify-center items-center">
+            @php
+                $slogan = $settings->where('name', 'slogan')->first();
+            @endphp
+            <img src="{{ $slogan ? $slogan->img_path : '/images/slogan-battle-en.png' }}" alt="slogan">
+        </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="flex-1 w-full flex flex-col md:flex-row items-center justify-center relative z-10">
-        <!-- Left Figures -->
-        <div class="hidden md:flex flex-col justify-end items-end flex-1 h-full">
-            <img src="/images/figure-left.png" alt="Left Characters" class="max-h-[500px] object-contain drop-shadow-2xl">
-        </div>
-        <!-- Center Slogan & Button -->
-        <div class="flex flex-col items-center justify-center text-center px-4">
-            <h1 class="text-white text-3xl md:text-5xl font-bold drop-shadow-lg mb-4">THE DIRGE IS TOLLED<br>THE PATHS UNFOLD</h1>
-            <button class="mt-6 focus:outline-none">
-                <img src="/images/btn-battle-en.png" alt="Get Ready For Battle" class="h-16 md:h-20 hover:scale-105 transition-transform">
-            </button>
-            <div class="flex justify-center gap-4 mt-4">
-                <img src="/images/windows.png" alt="Windows" class="h-8">
-                <img src="/images/apple.png" alt="Apple" class="h-8">
+    <div id="scene" style="
+            background-image: url({{ $settings->where('name', 'background')->first()?->img_path ?? '/images/bg-battle.webp' }});
+        ">
+        <div class="figures">
+            <div class="figures-day" id="scene-left" style="transform: translate(0px, 0px); transform-style: preserve-3d; backface-visibility: hidden; pointer-events: none;">
+                @php
+                    $leftFigures = $settings->where('name', 'like', 'figure-left-%');
+                @endphp
+                @foreach($leftFigures as $figure)
+                <div data-depth="{{ $loop->iteration * 0.3 }}" class="figures-part figures-part-left" style="transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden; position: {{ $loop->first ? 'relative' : 'absolute' }}; display: block; left: 0px; top: 0px;">
+                    <img src="{{ $figure->img_path }}" alt="">
+                </div>
+                @endforeach
+            </div>
+            <div class="figures-night" id="scene-right" style="transform: translate(0px, 0px); transform-style: preserve-3d; backface-visibility: hidden; pointer-events: none;">
+                @php
+                    $rightFigures = $settings->where('name', 'like', 'figure-right-%');
+                @endphp
+                @foreach($rightFigures as $figure)
+                <div data-depth="{{ $loop->iteration * 0.3 }}" class="figures-part figures-part-right" style="transform: translate3d(0px, 0px, 0px); transform-style: preserve-3d; backface-visibility: hidden; position: {{ $loop->first ? 'relative' : 'absolute' }}; display: block; left: 0px; top: 0px;">
+                    <img src="{{ $figure->img_path }}" alt="">
+                </div>
+                @endforeach
+            </div>
+            <div class="figures-boom" style="transform: scale(3, 3); opacity: 0;">
+                @php
+                    $boom = $settings->where('name', 'boom')->first();
+                @endphp
+                <img src="{{ $boom ? $boom->img_path : '/images/battle-boom.webp' }}" alt="boom">
+            </div>
+            <div class="figures-bottom" style="position: absolute; bottom: 0">
+                @php
+                    $bottom = $settings->where('name', 'bottom')->first();
+                @endphp
+                <img src="{{ $bottom ? $bottom->img_path : '/images/bg-bottom.webp' }}" alt="">
             </div>
         </div>
-        <!-- Right Figures -->
-        <div class="hidden md:flex flex-col justify-end items-start flex-1 h-full">
-            <img src="/images/figure-right.png" alt="Right Characters" class="max-h-[500px] object-contain drop-shadow-2xl">
-        </div>
     </div>
 
-    <!-- Bottom Background Overlay -->
-    <div class="absolute bottom-0 left-0 w-full z-20 pointer-events-none">
-        <img src="/images/bg-bottom.webp" alt="Bottom Background" class="w-full object-cover">
-    </div>
-
-    <!-- Footer -->
-    <footer class="w-full text-center text-xs text-white bg-black bg-opacity-60 py-2 z-30 relative">
-        © FUNPLUS INTERNATIONAL AG - ALL RIGHTS RESERVED
-        <a href="#" class="underline ml-2">Privacy Policy</a> and <a href="#" class="underline">Terms and Conditions</a>
-    </footer>
-</div>
+    <a class="btn bonus" href="javascript:void(0);" id="download-btn">
+        @php
+            $downloadBtn = $settings->where('name', 'download-button')->first();
+        @endphp
+        <img class="breathe" src="{{ $downloadBtn ? $downloadBtn->img_path : '/images/btn-battle-en.png' }}" alt="download">
+    </a>
+<footer><div class="copyright">© FUNPLUS INTERNATIONAL AG - ALL RIGHTS RESERVED <a href="https://funplus.com/privacy-policy/" target="_blank" style="color:#ddb463">Privacy Policy</a> and <a href="https://funplus.com/terms-conditions/" target="_blank" style="color:#ddb463">Terms and Conditions</a></div></footer></div>
 @endsection 
