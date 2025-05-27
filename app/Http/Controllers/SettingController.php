@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,7 +10,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        $settings = Setting::all();
+        $settings = Settings::all();
         return view('admin.settings.index', compact('settings'));
     }
 
@@ -32,24 +32,26 @@ class SettingController extends Controller
             $request->merge(['img_path' => $path]);
         }
 
-        Setting::create($request->all());
+        Settings::create($request->all());
 
-        return redirect()->route('settings.index')
+        return redirect()->route('admin.settings.index')
             ->with('success', 'Setting created successfully.');
     }
 
-    public function edit(Setting $setting)
+    public function edit(Settings $setting)
     {
         return view('admin.settings.edit', compact('setting'));
     }
 
-    public function update(Request $request, Setting $setting)
+    public function update(Request $request, Settings $setting)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'description' => 'nullable|string'
         ]);
+
+        $data = $request->except('img_path');
 
         if ($request->hasFile('img_path')) {
             // Xóa ảnh cũ
@@ -59,16 +61,16 @@ class SettingController extends Controller
             
             // Upload ảnh mới
             $path = $request->file('img_path')->store('images', 'public');
-            $request->merge(['img_path' => $path]);
+            $data['img_path'] = $path;
         }
 
-        $setting->update($request->all());
+        $setting->update($data);
 
-        return redirect()->route('settings.index')
+        return redirect()->route('admin.settings.index')
             ->with('success', 'Setting updated successfully');
     }
 
-    public function destroy(Setting $setting)
+    public function destroy(Settings $setting)
     {
         // Xóa ảnh khi xóa setting
         if ($setting->img_path) {
@@ -77,7 +79,7 @@ class SettingController extends Controller
 
         $setting->delete();
 
-        return redirect()->route('settings.index')
+        return redirect()->route('admin.settings.index')
             ->with('success', 'Setting deleted successfully');
     }
 } 
