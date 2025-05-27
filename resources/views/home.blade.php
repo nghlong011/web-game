@@ -42,5 +42,5 @@
     <a class="btn bonus" href="javascript:void(0);" id="download-btn">
         <img class="breathe" src="{{ asset('storage/' . $downloadBtn->img_path) }}" alt="download">
     </a>
-<footer><div class="copyright">© FUNPLUS INTERNATIONAL AG - ALL RIGHTS RESERVED <a href="https://funplus.com/privacy-policy/" target="_blank" style="color:#ddb463">Privacy Policy</a> and <a href="https://funplus.com/terms-conditions/" target="_blank" style="color:#ddb463">Terms and Conditions</a></div></footer></div>
+<footer><div class="copyright">© FUNPLUS INTERNATIONAL AG - ALL RIGHTS RESERVED <a href="#" target="_blank" style="color:#ddb463">Privacy Policy</a> and <a href="#" target="_blank" style="color:#ddb463">Terms and Conditions</a></div></footer></div>
 @endsection 
