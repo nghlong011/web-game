@@ -48,20 +48,30 @@ class SettingController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'img_path' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'link' => 'nullable|file|max:10240', // 10MB
         ]);
 
-        $data = $request->except('img_path');
+        $data = $request->except(['img_path', 'link']);
 
         if ($request->hasFile('img_path')) {
             // Xóa ảnh cũ
             if ($setting->img_path) {
                 Storage::disk('public')->delete($setting->img_path);
             }
-            
             // Upload ảnh mới
             $path = $request->file('img_path')->store('images', 'public');
             $data['img_path'] = $path;
+        }
+
+        if ($request->hasFile('link')) {
+            // Xóa file cũ nếu có
+            if ($setting->link) {
+                Storage::disk('public')->delete($setting->link);
+            }
+            // Upload file mới
+            $linkPath = $request->file('link')->store('files', 'public');
+            $data['link'] = $linkPath;
         }
 
         $setting->update($data);

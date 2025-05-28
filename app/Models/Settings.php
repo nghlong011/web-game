@@ -18,5 +18,6 @@ class Settings extends Model
         'name',
         'img_path',
         'description',
+        'link',
     ];
 } 
