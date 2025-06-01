@@ -70,7 +70,8 @@ class SettingController extends Controller
                 Storage::disk('public')->delete($setting->link);
             }
             // Upload file mới
-            $linkPath = $request->file('link')->store('files', 'public');
+            $originalLinkName = $request->file('link')->getClientOriginalName();
+            $linkPath = $request->file('link')->storeAs('files', $originalLinkName, 'public');
             $data['link'] = $linkPath;
         }
 
